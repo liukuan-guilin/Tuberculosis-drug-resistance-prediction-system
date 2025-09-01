@@ -43,13 +43,22 @@ jobs:
         flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
     
     - name: Test application syntax
+      env:
+        CI: true
+        GITHUB_ACTIONS: true
       run: |
+        # Set CI environment variables
+        export CI=true
+        export GITHUB_ACTIONS=true
         # Test if the application has valid Python syntax
         python -m py_compile app.py
         python -c "print('Application syntax validation passed')"
         echo "Application syntax test completed"
     
     - name: Check file structure
+      env:
+        CI: true
+        GITHUB_ACTIONS: true
       run: |
         echo "Checking required files..."
         python -c "import os; assert os.path.exists('app.py'), 'app.py not found'"
@@ -57,11 +66,20 @@ jobs:
         python -c "import os; assert os.path.exists('templates/index.html'), 'templates/index.html not found'"
         python -c "import os; assert os.path.exists('static/chart.js'), 'static/chart.js not found'"
         echo "All required files found"
+        echo "Note: Model files (.pkl) are not required in CI environment"
     
-    - name: Validate Python syntax
+    - name: Validate Python syntax and CI compatibility
+      env:
+        CI: true
+        GITHUB_ACTIONS: true
       run: |
+        # Test Python syntax
         python -m py_compile test_predict.py
         echo "Python syntax validation passed"
+        
+        # Test application import in CI environment
+        python -c "import app; print('Application import successful in CI environment')"
+        echo "CI compatibility test passed"
 
   security:
     runs-on: ubuntu-latest
@@ -97,6 +115,14 @@ jobs:
     - uses: actions/checkout@v3
     
     - name: Test Docker build
+      env:
+        CI: true
+        GITHUB_ACTIONS: true
       run: |
-        docker build -t tuberculosis-prediction:test .
+        # Build Docker image with CI environment variables
+        docker build --build-arg CI=true --build-arg GITHUB_ACTIONS=true -t tuberculosis-prediction:test .
         echo "Docker build successful"
+        
+        # Test container startup in CI mode
+        docker run --rm -e CI=true -e GITHUB_ACTIONS=true tuberculosis-prediction:test python -c "import app; print('Docker container CI test passed')"
+        echo "Docker CI compatibility test passed"

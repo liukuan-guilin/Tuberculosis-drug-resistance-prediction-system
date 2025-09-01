@@ -8,6 +8,7 @@ WORKDIR /app
 RUN apt-get update && apt-get install -y \
     gcc \
     g++ \
+    curl \
     && rm -rf /var/lib/apt/lists/*
 
 # 复制requirements文件并安装Python依赖
@@ -28,9 +29,15 @@ EXPOSE 5000
 ENV FLASK_APP=app.py
 ENV FLASK_ENV=production
 
+# 支持CI环境变量
+ARG CI
+ARG GITHUB_ACTIONS
+ENV CI=${CI}
+ENV GITHUB_ACTIONS=${GITHUB_ACTIONS}
+
 # 健康检查
 HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
-    CMD curl -f http://localhost:5000/ || exit 1
+    CMD curl -f http://localhost:5000/health || exit 1
 
 # 启动应用
 CMD ["python", "app.py"]
