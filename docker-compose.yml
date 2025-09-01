@@ -1,0 +1,50 @@
+version: '3.8'
+
+services:
+  tuberculosis-prediction:
+    build: .
+    container_name: tb-prediction-app
+    ports:
+      - "5000:5000"
+    environment:
+      - FLASK_ENV=production
+      - FLASK_APP=app.py
+    volumes:
+      # 可选：挂载日志目录
+      - ./logs:/app/logs
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5000/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    networks:
+      - tb-network
+
+  # 可选：添加Nginx反向代理
+  nginx:
+    image: nginx:alpine
+    container_name: tb-prediction-nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      # SSL证书目录（如果需要HTTPS）
+      # - ./ssl:/etc/nginx/ssl:ro
+    depends_on:
+      - tuberculosis-prediction
+    restart: unless-stopped
+    networks:
+      - tb-network
+    profiles:
+      - production
+
+networks:
+  tb-network:
+    driver: bridge
+
+volumes:
+  logs:
+    driver: local

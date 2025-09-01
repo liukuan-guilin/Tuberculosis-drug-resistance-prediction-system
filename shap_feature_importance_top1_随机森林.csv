@@ -1,0 +1,13 @@
+﻿Feature,Chinese_Feature,SHAP_Importance
+Symptom_Onset_Days,Interval from Symptom Onset to Diagnosis (days),0.10317735918500048
+TB_Treatment_History,Tuberculosis Treatment History 1=New Case 2=Previously treated,0.07908241885755195
+Treatment_Adherence,Treatment Adherence 0=Poor 1=Good,0.05994818918621202
+Pulmonary_Cavitation,Pulmonary Cavitation 0=No 1=Yes,0.05672103834115221
+Smoking_History,Smoking History 0=No 1=Yes,0.0404373708458015
+Pretreatment_Smear,Pretreatment smear results 0=Negative 1=1+ 2=2+ 3=3+ 4=4+,0.03791646977257794
+Pulmonary_Micronodules,Pulmonary Micronodules 0=No 1=Yes,0.03352159610267752
+Pulmonary_Consolidation,Pulmonary Consolidation 0=No 1=Yes,0.03241333736732829
+FPG,FPG (mmol/L),0.024441754038600102
+Hemoglobin,"Hemoglobin (HGB, g/L)",0.015958545204646356
+PNI,PNI,0.0158908373726954
+Monocytes,Monocytes (10^9/L),0.012592868848307058
