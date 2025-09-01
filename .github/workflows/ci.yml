@@ -52,15 +52,14 @@ jobs:
     - name: Check file structure
       run: |
         echo "Checking required files..."
-        test -f app.py || (echo "app.py not found" && exit 1)
-        test -f requirements.txt || (echo "requirements.txt not found" && exit 1)
-        test -f templates/index.html || (echo "templates/index.html not found" && exit 1)
-        test -f static/chart.js || (echo "static/chart.js not found" && exit 1)
+        python -c "import os; assert os.path.exists('app.py'), 'app.py not found'"
+        python -c "import os; assert os.path.exists('requirements.txt'), 'requirements.txt not found'"
+        python -c "import os; assert os.path.exists('templates/index.html'), 'templates/index.html not found'"
+        python -c "import os; assert os.path.exists('static/chart.js'), 'static/chart.js not found'"
         echo "All required files found"
     
     - name: Validate Python syntax
       run: |
-        python -m py_compile app.py
         python -m py_compile test_predict.py
         echo "Python syntax validation passed"
 

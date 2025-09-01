@@ -17,3 +17,4 @@ cloudpickle==2.2.1
 numba==0.57.1
 llvmlite==0.40.1
 slicer==0.0.7
+requests==2.31.0
